@@ -1,20 +1,21 @@
-type Usuario = {
-    idade = number
-}
+import Fastify from 'fastify' 
+import cors from '@fastify/cors'
+import { PrismaClient } from '@prisma/client'
 
-function mostraIdadeDoUsuario(usuario: Usuario) {
-    return usuario.idade
-}
 
-const usuario = {
-    nome: "Júlio",
-    idade: 38
-}
+const app = Fastify()
+const prisma = new PrismaClient()
 
-mostraIdadeDoUsuario(usuario)
+app.register(cors)
 
-const usuario2 = {
-    nome: "Júlio",
-}
+app.get('/hello', async () => {
+    const habits = await prisma.habit.findMany()
+    
+    return habits
+})
 
-mostraIdadeDoUsuario(usuario2)
+app.listen ({
+    port: 3333,
+}).then(() => {
+    console.log('HTTP Server running!')
+})
